@@ -6,6 +6,7 @@ import React, {
   useMemo,
   useCallback,
   Fragment,
+  Component,
 } from "react";
 
 import SendWhiteIcon from "../icons/send-white.svg";
@@ -27,6 +28,8 @@ import PinIcon from "../icons/pin.svg";
 import EditIcon from "../icons/rename.svg";
 import ConfirmIcon from "../icons/confirm.svg";
 import CancelIcon from "../icons/cancel.svg";
+import RechargeIcon from "../icons/recharge.svg";
+import KeyIcon from "../icons/key.svg";
 
 import LightIcon from "../icons/light.svg";
 import DarkIcon from "../icons/dark.svg";
@@ -34,6 +37,8 @@ import AutoIcon from "../icons/auto.svg";
 import BottomIcon from "../icons/bottom.svg";
 import StopIcon from "../icons/pause.svg";
 import RobotIcon from "../icons/robot.svg";
+import NavbarIcon from "../icons/navbar.svg";
+import NavbarXIcon from "../icons/navbar-X.svg";
 
 import {
   ChatMessage,
@@ -63,7 +68,7 @@ import Locale from "../locales";
 
 import { IconButton } from "./button";
 import styles from "./chat.module.scss";
-
+import navStyle from "./navbar.scss";
 import {
   List,
   ListItem,
@@ -72,6 +77,7 @@ import {
   showConfirm,
   showPrompt,
   showToast,
+  Input,
 } from "./ui-lib";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
@@ -88,6 +94,10 @@ import { ChatCommandPrefix, useChatCommand, useCommand } from "../command";
 import { prettyObject } from "../utils/format";
 import { ExportMessageModal } from "./exporter";
 import { getClientConfig } from "../config/client";
+import { SetAPIModal } from "./setAPI";
+import { SetRecharge } from "./recharge";
+import Footer from "./footer";
+import comUtil from "../utils/comUtil";
 
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <LoadingIcon />,
@@ -455,6 +465,7 @@ export function ChatActions(props: {
           icon={<BottomIcon />}
         />
       )}
+      {/** 
       {props.hitBottom && (
         <ChatAction
           onClick={props.showPromptModal}
@@ -462,7 +473,7 @@ export function ChatActions(props: {
           icon={<SettingsIcon />}
         />
       )}
-
+*/}
       <ChatAction
         onClick={nextTheme}
         text={Locale.Chat.InputActions.Theme[theme]}
@@ -508,11 +519,13 @@ export function ChatActions(props: {
         }}
       />
 
+      {/**
       <ChatAction
         onClick={() => setShowModelSelector(true)}
         text={currentModel}
         icon={<RobotIcon />}
-      />
+      /> 
+      */}
 
       {showModelSelector && (
         <Selector
@@ -605,6 +618,10 @@ function _Chat() {
   const session = chatStore.currentSession();
   const config = useAppConfig();
   const fontSize = config.fontSize;
+
+  // 余额，设置key
+  const [rechargeAPI, setRechargeAPI] = useState(false);
+  const [userAPI, setUserAPI] = useState(false);
 
   const [showExport, setShowExport] = useState(false);
 
@@ -699,6 +716,7 @@ function _Chat() {
     setPromptHints([]);
     if (!isMobileScreen) inputRef.current?.focus();
     setAutoScroll(true);
+    setTimeout(loadPaccount, 8888);
   };
 
   const onPromptSelect = (prompt: RenderPompt) => {
@@ -1013,9 +1031,210 @@ function _Chat() {
   // edit / insert message modal
   const [isEditingMessage, setIsEditingMessage] = useState(false);
 
+  // 余额查询窗口
+  const [paccount, setPaccount] = useState("");
+  const loadPaccount = () => {
+    //console.log("Key:" + accessStore.token)
+
+    fetch(comUtil.getApiHost() + "/dashboard/billing/credit_grants", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessStore.token}`,
+      },
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        if (res["object"] === "credit_summary") {
+          setPaccount(res["total_available"] + " P");
+        } else {
+          setPaccount("[请先设置Key!]");
+        }
+
+        //console.log("余额:" + paccount);
+        //console.log(res)
+      })
+      .catch((e) => {
+        setPaccount("[?]");
+        console.log("err:", e);
+      });
+  };
+
+  // 展示页脚
+  const [showFooter, setShowFooter] = useState(false);
+
+  // 头部栏
+  class NavBar extends Component {
+    state = { clicked: false, isSmall: false };
+    handleClick = () => {
+      this.setState({ clicked: !this.state.clicked });
+    };
+
+    componentDidMount() {
+      window.addEventListener("resize", this.handleResize);
+      this.handleResize();
+    }
+
+    componentWillUnmount() {
+      window.removeEventListener("resize", this.handleResize);
+    }
+
+    handleResize = () => {
+      if ((window.innerWidth as number) < 300) {
+        this.setState({ isSmall: true });
+      } else {
+        this.setState({ isSmall: false });
+      }
+    };
+
+    render() {
+      return (
+        <>
+          <nav>
+            <div>
+              <ul
+                id="navbar"
+                className={this.state.clicked ? "navbar active" : "navbar"}
+              >
+                {/* 充值 */}
+                <li>
+                  <IconButton
+                    //icon={<AddIcon />}
+                    bordered
+                    text={"余额充值"}
+                    title={"余额充值"}
+                    onClick={() => {
+                      setRechargeAPI(true);
+                    }}
+                  />
+                </li>
+
+                {/*设置API接口*/}
+                <li>
+                  <IconButton
+                    //icon={<SettingsIcon />}
+                    bordered
+                    text={"设置Key"}
+                    title={"设置key"}
+                    onClick={() => {
+                      setUserAPI(true);
+                    }}
+                  />
+                </li>
+
+                {/*重命名*/}
+                <li>
+                  <IconButton
+                    //icon={<RenameIcon />}
+                    bordered
+                    text={"更改标题"}
+                    title={"重命名对话标题"}
+                    onClick={() => setIsEditingMessage(true)}
+                  />
+                </li>
+
+                {/*导出*/}
+                <li>
+                  <IconButton
+                    //icon={<ExportIcon />}
+                    bordered
+                    text={"导出记录"}
+                    title={Locale.Chat.Actions.Export}
+                    onClick={() => {
+                      setShowExport(true);
+                    }}
+                  />
+                </li>
+
+                {/* 全屏 */}
+                <li>
+                  {!isMobileScreen && (
+                    <IconButton
+                      icon={config.tightBorder ? <MinIcon /> : <MaxIcon />}
+                      bordered
+                      title={"全屏"}
+                      onClick={() => {
+                        config.update(
+                          (config) =>
+                            (config.tightBorder = !config.tightBorder),
+                        );
+                        setShowFooter(config.tightBorder ? true : false);
+                      }}
+                    />
+                  )}
+                </li>
+
+                {/*余额查询*/}
+                <li></li>
+              </ul>
+            </div>
+
+            <div
+              id="mobile"
+              className={navStyle["mobile"]}
+              onClick={this.handleClick}
+            >
+              <IconButton
+                icon={this.state.clicked ? <NavbarXIcon /> : <NavbarIcon />}
+              />
+            </div>
+
+            <PromptToast
+              showToast={!hitBottom}
+              showModal={showPromptModal}
+              setShowModal={setShowPromptModal}
+            />
+          </nav>
+        </>
+      );
+    }
+  }
+
   return (
     <div className={styles.chat} key={session.id}>
       <div className="window-header" data-tauri-drag-region>
+        {/** 
+        {!isMobileScreen && (
+          <div className="window-header-title">
+            <div
+              className={`window-header-main-title " ${styles["chat-body-title"]}`}
+              onClickCapture={() => setIsEditingMessage(true)}
+            >
+              {!session.topic ? DEFAULT_TOPIC : session.topic}
+            </div>
+            <div className="window-header-sub-title">
+              {Locale.Chat.SubTitle(session.messages.length)}
+            </div>
+          </div>
+        )}
+
+        <div className={"window-action-button" + " " + styles.mobile}>
+          <IconButton
+            icon={<ReturnIcon />}
+            bordered
+            title={Locale.Chat.Actions.ChatList}
+            onClick={() => navigate(Path.Home)}
+          />
+        </div>
+
+        <div className={"window-action-button"}>
+          <Input
+            //autoHeight={true}
+            contentEditable={true}
+            readOnly={true}
+            value={"余额：" + paccount}
+            rows={1}
+            onClickCapture={loadPaccount}
+          ></Input>
+        </div>
+
+        <div className={"window-action-button"}>
+          <NavBar />
+        </div>
+      */}
+
         {isMobileScreen && (
           <div className="window-actions">
             <div className={"window-action-button"}>
@@ -1036,20 +1255,70 @@ function _Chat() {
           >
             {!session.topic ? DEFAULT_TOPIC : session.topic}
           </div>
-          <div className="window-header-sub-title">
-            {Locale.Chat.SubTitle(session.messages.length)}
+          <div
+            className="window-header-sub-title"
+            onClickCapture={loadPaccount}
+          >
+            {Locale.Chat.SubTitle(session.messages.length) +
+              "    |    余额：" +
+              paccount}
           </div>
         </div>
-        <div className="window-actions">
-          {!isMobileScreen && (
+
+        {isMobileScreen && (
+          <div className="window-actions">
             <div className="window-action-button">
               <IconButton
-                icon={<RenameIcon />}
+                icon={<RechargeIcon />}
                 bordered
-                onClick={() => setIsEditingMessage(true)}
+                //text={"充值"}
+                title={"余额充值"}
+                onClick={() => setRechargeAPI(true)}
               />
             </div>
-          )}
+            <div className="window-action-button">
+              <IconButton
+                icon={<KeyIcon />}
+                bordered
+                //text={"Key"}
+                title={"Key设置"}
+                onClick={() => setUserAPI(true)}
+              />
+            </div>
+          </div>
+        )}
+
+        {!isMobileScreen && (
+          <div className="window-actions">
+            <div className="window-action-button">
+              <IconButton
+                icon={<RechargeIcon />}
+                bordered
+                text={"充值"}
+                title={"余额充值"}
+                onClick={() => setRechargeAPI(true)}
+              />
+            </div>
+            <div className="window-action-button">
+              <IconButton
+                icon={<KeyIcon />}
+                bordered
+                text={"Key"}
+                title={"Key设置"}
+                onClick={() => setUserAPI(true)}
+              />
+            </div>
+          </div>
+        )}
+
+        <div className="window-actions">
+          <div className="window-action-button">
+            <IconButton
+              icon={<RenameIcon />}
+              bordered
+              onClick={() => setIsEditingMessage(true)}
+            />
+          </div>
           <div className="window-action-button">
             <IconButton
               icon={<ExportIcon />}
@@ -1060,19 +1329,21 @@ function _Chat() {
               }}
             />
           </div>
-          {showMaxIcon && (
-            <div className="window-action-button">
-              <IconButton
-                icon={config.tightBorder ? <MinIcon /> : <MaxIcon />}
-                bordered
-                onClick={() => {
-                  config.update(
-                    (config) => (config.tightBorder = !config.tightBorder),
-                  );
-                }}
-              />
-            </div>
-          )}
+          <div className="window-action-button">
+            {showMaxIcon && (
+              <div className="window-action-button">
+                <IconButton
+                  icon={config.tightBorder ? <MinIcon /> : <MaxIcon />}
+                  bordered
+                  onClick={() => {
+                    config.update(
+                      (config) => (config.tightBorder = !config.tightBorder),
+                    );
+                  }}
+                />
+              </div>
+            )}
+          </div>
         </div>
 
         <PromptToast
@@ -1272,6 +1543,26 @@ function _Chat() {
           }}
         />
       )}
+
+      {rechargeAPI && (
+        <SetRecharge
+          onClose={() => {
+            setRechargeAPI(false);
+            loadPaccount();
+          }}
+        />
+      )}
+
+      {userAPI && (
+        <SetAPIModal
+          onClose={() => {
+            setUserAPI(false);
+            loadPaccount();
+          }}
+        />
+      )}
+
+      {!isMobileScreen && showFooter && <Footer />}
     </div>
   );
 }

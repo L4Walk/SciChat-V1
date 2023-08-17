@@ -1,0 +1,174 @@
+nav{
+  display:flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#navbar{
+  display: flex;
+  align-items: center;
+  justify-self: center;
+}
+
+#navbar ul{
+display: flex;
+}
+
+#navbar li{
+  list-style: none;
+  padding:0 20px;
+  position: relative;
+  flex-grow: 1;
+  flex:1;
+}
+
+#mobile {
+  display: none;
+}
+
+#mobile i{
+  align-items: center;
+}
+
+@media screen and (max-width:1080px){
+  #navbar{
+      display: flex;
+      flex-direction: column;
+      align-items: flex;
+      justify-self: flex;
+      position: fixed;
+      top: 80px;
+      right: -600px;
+      width: 90px;
+      height: 250px;
+      z-index: 9999;
+      transition: 0.3s ease-in-out;
+      background-color: var(--primary);
+      border-radius: 10px;
+      padding: 10px;
+      opacity: 0.9;
+  }
+
+  #navbar.active{
+      right: 0px;
+  }
+
+  #navbar ul {
+    position: relative;
+  }
+
+  #navbar li{
+    margin-bottom: 15px;
+    flex-grow: 1;
+    position: relative;
+    display: flex;
+  }
+
+  #navbar button{
+    flex: 1;
+    width: 100%;
+  }
+
+  #mobile{
+      display: block;
+  }
+
+  .nav-button {
+    flex-grow: 1;
+
+    &:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
+
+  .custom-button {
+    width: auto;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .custom-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .custom-button:focus {
+    outline: none;
+  }
+  
+}
+
+
+
+
+/*
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-self: center;
+  
+      ul{
+        display: flex;
+      }
+
+      li {
+        list-style: none;
+        padding: 0 20px;
+        position: relative;
+        flex-grow: 1;
+        flex:1;
+      }
+    }
+  
+    .mobile {
+      display: none;
+  
+      i {
+        align-items: center;
+      }
+    }
+  
+    @media screen and (max-width: 400px) {
+      .navbar {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-self: flex-start;
+        position: fixed;
+        top: 80px;
+        right: -600px;
+        width: 125px;
+        height: 25vh;
+        z-index: 9999;
+        transition: 0.3s ease-in-out;
+
+        background-color: var(--primary);
+        border-radius: 10px;
+        padding: 10px;
+        opacity: 0.9;
+  
+        &.active {
+          right: 1px;
+        }
+  
+        .li {
+          margin-bottom: 15px;
+          flex-grow: 1;
+        }
+      }
+  
+      .mobile {
+        display: block;
+      }
+    }
+  }
+  */
+  

@@ -11,6 +11,8 @@ import CloseIcon from "../icons/close.svg";
 import MaskIcon from "../icons/mask.svg";
 import PluginIcon from "../icons/plugin.svg";
 import DragIcon from "../icons/drag.svg";
+import ChatLogo from "../icons/chatLogo.svg";
+import EmailIcon from "../icons/email.svg";
 
 import Locale from "../locales";
 
@@ -22,6 +24,7 @@ import {
   NARROW_SIDEBAR_WIDTH,
   Path,
   REPO_URL,
+  MailMe,
 } from "../constant";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -118,13 +121,13 @@ export function SideBar(props: { className?: string }) {
     >
       <div className={styles["sidebar-header"]} data-tauri-drag-region>
         <div className={styles["sidebar-title"]} data-tauri-drag-region>
-          ChatGPT Next
+          SciChat
         </div>
         <div className={styles["sidebar-sub-title"]}>
-          Build your own AI assistant.
+          基于OpenAI API 的智能问答程序
         </div>
         <div className={styles["sidebar-logo"] + " no-dark"}>
-          <ChatGptIcon />
+          <ChatLogo />
         </div>
       </div>
 
@@ -169,15 +172,17 @@ export function SideBar(props: { className?: string }) {
             />
           </div>
           <div className={styles["sidebar-action"]}>
-            <Link to={Path.Settings}>
-              <IconButton icon={<SettingsIcon />} shadow />
-            </Link>
+            <a href={MailMe} target="_blank">
+              <IconButton icon={<EmailIcon />} text={"意见反馈"} shadow />
+            </a>
           </div>
+          {/* 
           <div className={styles["sidebar-action"]}>
             <a href={REPO_URL} target="_blank">
               <IconButton icon={<GithubIcon />} shadow />
             </a>
           </div>
+          */}
         </div>
         <div>
           <IconButton
