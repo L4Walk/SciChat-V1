@@ -78,6 +78,42 @@ export const DEFAULT_MODELS = [
     available: true,
   },
   {
+    name: "gpt-3.5-turbo",
+    available: true,
+  },
+  {
+    name: "gpt-3.5-turbo-0301",
+    available: true,
+  },
+  {
+    name: "gpt-3.5-turbo-0613",
+    available: true,
+  },
+  {
+    name: "gpt-3.5-turbo-16k",
+    available: true,
+  },
+  {
+    name: "gpt-3.5-turbo-16k-0613",
+    available: true,
+  },
+] as const;
+
+/*
+export const DEFAULT_MODELS = [
+  {
+    name: "gpt-4",
+    available: true,
+  },
+  {
+    name: "gpt-4-0314",
+    available: true,
+  },
+  {
+    name: "gpt-4-0613",
+    available: true,
+  },
+  {
     name: "gpt-4-32k",
     available: true,
   },
@@ -110,6 +146,7 @@ export const DEFAULT_MODELS = [
     available: true,
   },
 ] as const;
+*/
 
 export const CHAT_PAGE_SIZE = 15;
 export const MAX_RENDER_MSG_COUNT = 45;

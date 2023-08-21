@@ -8,6 +8,7 @@ import styles from "./home.module.scss";
 
 import BotIcon from "../icons/bot.svg";
 import LoadingIcon from "../icons/three-dots.svg";
+import ChatBotIcon from "../icons/chatbot-32.svg";
 
 import { getCSSVar, useMobileScreen } from "../utils";
 
@@ -33,7 +34,7 @@ import { useAccessStore } from "../store";
 export function Loading(props: { noLogo?: boolean }) {
   return (
     <div className={styles["loading-content"] + " no-dark"}>
-      {!props.noLogo && <BotIcon />}
+      {!props.noLogo && <ChatBotIcon />}
       <LoadingIcon />
     </div>
   );
