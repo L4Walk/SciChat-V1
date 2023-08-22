@@ -35,7 +35,7 @@ import RmbIcon from "../icons/money-rmb.svg";
 import WeChatPay from "../icons/wechat-pay.svg";
 import AliPay from "../icons/ali-pay.svg";
 import Load from "../icons/load.svg";
-import { useWindowSize } from "../utils";
+import { useWindowSize, useMobileScreen } from "../utils";
 
 function useSteps(
   steps: Array<{
@@ -153,6 +153,8 @@ export function Recharge() {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
 
+  const isMobileScreen = useMobileScreen();
+
   function showPayQr() {
     if (price.length == 0 || Number(price) <= 0) {
       return;
@@ -254,102 +256,188 @@ export function Recharge() {
         className={styles["message-exporter-body"]}
         style={currentStep.value !== "setPrice" ? { display: "none" } : {}}
       >
-        <List>
-          <ListItem title={"选择金额"} subTitle={""}>
-            <IconButton
-              icon={<RmbIcon />}
-              text={"5元"}
-              className={styles["sidebar-bar-button"]}
-              shadow
-              onClick={() => {
-                setPrice("5");
-                setPayQrUrl("");
-              }}
-            />
+        {isMobileScreen && (
+          <List>
+            <ListItem title={"选择金额"} subTitle={""}>
+              <IconButton
+                text={"5元"}
+                className={styles["sidebar-bar-button"]}
+                shadow
+                onClick={() => {
+                  setPrice("5");
+                  setPayQrUrl("");
+                }}
+              />
 
-            <IconButton
-              icon={<RmbIcon />}
-              text={"10元"}
-              className={styles["sidebar-bar-button"]}
-              shadow
-              onClick={() => {
-                setPrice("10");
-                setPayQrUrl("");
-              }}
-            />
+              <IconButton
+                text={"10元"}
+                className={styles["sidebar-bar-button"]}
+                shadow
+                onClick={() => {
+                  setPrice("10");
+                  setPayQrUrl("");
+                }}
+              />
 
-            <IconButton
-              icon={<RmbIcon />}
-              text={"20"}
-              className={styles["sidebar-bar-button"]}
-              shadow
-              onClick={() => {
-                setPrice("20");
-                setPayQrUrl("");
-              }}
-            />
+              <IconButton
+                text={"20元"}
+                className={styles["sidebar-bar-button"]}
+                shadow
+                onClick={() => {
+                  setPrice("20");
+                  setPayQrUrl("");
+                }}
+              />
 
-            <IconButton
-              icon={<RmbIcon />}
-              text={"50"}
-              className={styles["sidebar-bar-button"]}
-              shadow
-              onClick={() => {
-                setPrice("50");
-                setPayQrUrl("");
-              }}
-            />
+              <IconButton
+                text={"50元"}
+                className={styles["sidebar-bar-button"]}
+                shadow
+                onClick={() => {
+                  setPrice("50");
+                  setPayQrUrl("");
+                }}
+              />
+            </ListItem>
 
-            <IconButton
-              icon={<RmbIcon />}
-              text={"100"}
-              className={styles["sidebar-bar-button"]}
-              shadow
-              onClick={() => {
-                setPrice("100");
-                setPayQrUrl("");
-              }}
-            />
-          </ListItem>
+            <ListItem title="自定义金额">
+              <Input
+                type="text"
+                value={price}
+                onInput={(e) => {
+                  setPrice(e.currentTarget.value);
+                  setPayQrUrl("");
+                }}
+              ></Input>
+            </ListItem>
 
-          <ListItem title="自定义金额">
-            <Input
-              type="text"
-              value={price}
-              onInput={(e) => {
-                setPrice(e.currentTarget.value);
-                setPayQrUrl("");
-              }}
-            ></Input>
-          </ListItem>
+            <ListItem title="请选择支付方式">
+              <IconButton
+                icon={<WeChatPay />}
+                text={"微信"}
+                onClick={() => {
+                  setPayQrUrl("");
+                  setPayType("native");
+                  setOrderID(comUtil.getGuid);
+                  createPayQrCode("native", price, comUtil.getGuid());
+                  setCurrentStepIndex(1);
+                  //showPayQr("native");
+                }}
+              />
+              <IconButton
+                icon={<AliPay />}
+                text={"支付宝"}
+                onClick={() => {
+                  setPayQrUrl("");
+                  setPayType("alipay");
+                  setOrderID(comUtil.getGuid);
+                  createPayQrCode("alipay", price, comUtil.getGuid());
+                  setCurrentStepIndex(1);
+                  //showPayQr("alipay");
+                }}
+              />
+            </ListItem>
+          </List>
+        )}
 
-          <ListItem title="请选择支付方式">
-            <IconButton
-              icon={<WeChatPay />}
-              text={"微信支付"}
-              onClick={() => {
-                setPayQrUrl("");
-                setPayType("native");
-                setOrderID(comUtil.getGuid);
-                createPayQrCode("native", price, comUtil.getGuid());
-                setCurrentStepIndex(1);
-                //showPayQr("native");
-              }}
-            />
-            <IconButton
-              icon={<AliPay />}
-              text={"支付宝支付"}
-              onClick={() => {
-                setPayQrUrl("");
-                setPayType("alipay");
-                setOrderID(comUtil.getGuid);
-                createPayQrCode("alipay", price, comUtil.getGuid());
-                setCurrentStepIndex(1);
-                //showPayQr("alipay");
-              }}
-            />
-          </ListItem>
-        </List>
+        {!isMobileScreen && (
+          <List>
+            <ListItem title={"选择金额"} subTitle={""}>
+              <IconButton
+                icon={<RmbIcon />}
+                text={"5元"}
+                className={styles["sidebar-bar-button"]}
+                shadow
+                onClick={() => {
+                  setPrice("5");
+                  setPayQrUrl("");
+                }}
+              />
+
+              <IconButton
+                icon={<RmbIcon />}
+                text={"10元"}
+                className={styles["sidebar-bar-button"]}
+                shadow
+                onClick={() => {
+                  setPrice("10");
+                  setPayQrUrl("");
+                }}
+              />
+
+              <IconButton
+                icon={<RmbIcon />}
+                text={"20"}
+                className={styles["sidebar-bar-button"]}
+                shadow
+                onClick={() => {
+                  setPrice("20");
+                  setPayQrUrl("");
+                }}
+              />
+
+              <IconButton
+                icon={<RmbIcon />}
+                text={"50"}
+                className={styles["sidebar-bar-button"]}
+                shadow
+                onClick={() => {
+                  setPrice("50");
+                  setPayQrUrl("");
+                }}
+              />
+
+              <IconButton
+                icon={<RmbIcon />}
+                text={"100"}
+                className={styles["sidebar-bar-button"]}
+                shadow
+                onClick={() => {
+                  setPrice("100");
+                  setPayQrUrl("");
+                }}
+              />
+            </ListItem>
+
+            <ListItem title="自定义金额">
+              <Input
+                type="text"
+                value={price}
+                onInput={(e) => {
+                  setPrice(e.currentTarget.value);
+                  setPayQrUrl("");
+                }}
+              ></Input>
+            </ListItem>
+
+            <ListItem title="请选择支付方式">
+              <IconButton
+                icon={<WeChatPay />}
+                text={"微信支付"}
+                onClick={() => {
+                  setPayQrUrl("");
+                  setPayType("native");
+                  setOrderID(comUtil.getGuid);
+                  createPayQrCode("native", price, comUtil.getGuid());
+                  setCurrentStepIndex(1);
+                  //showPayQr("native");
+                }}
+              />
+              <IconButton
+                icon={<AliPay />}
+                text={"支付宝支付"}
+                onClick={() => {
+                  setPayQrUrl("");
+                  setPayType("alipay");
+                  setOrderID(comUtil.getGuid);
+                  createPayQrCode("alipay", price, comUtil.getGuid());
+                  setCurrentStepIndex(1);
+                  //showPayQr("alipay");
+                }}
+              />
+            </ListItem>
+          </List>
+        )}
       </div>
       {currentStep.value === "showQr" && (
         <div className={styles["message-exporter-body"]}>
