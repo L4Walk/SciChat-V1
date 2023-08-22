@@ -465,7 +465,6 @@ export function ChatActions(props: {
           icon={<BottomIcon />}
         />
       )}
-      {/** 
       {props.hitBottom && (
         <ChatAction
           onClick={props.showPromptModal}
@@ -473,7 +472,6 @@ export function ChatActions(props: {
           icon={<SettingsIcon />}
         />
       )}
-*/}
       <ChatAction
         onClick={nextTheme}
         text={Locale.Chat.InputActions.Theme[theme]}
@@ -519,13 +517,11 @@ export function ChatActions(props: {
         }}
       />
 
-      {/**
       <ChatAction
         onClick={() => setShowModelSelector(true)}
         text={currentModel}
         icon={<RobotIcon />}
-      /> 
-      */}
+      />
 
       {showModelSelector && (
         <Selector
