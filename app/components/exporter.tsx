@@ -19,7 +19,7 @@ import LoadingIcon from "../icons/three-dots.svg";
 import ChatGptIcon from "../icons/chatgpt.png";
 import ShareIcon from "../icons/share.svg";
 import BotIcon from "../icons/bot.png";
-import SciChatIcon from "../icons/chatbot-32.svg";
+import SciChatIcon from "../icons/logo.png";
 
 import DownloadIcon from "../icons/download.svg";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -466,19 +466,20 @@ export function ImagePreviewer(props: {
         ref={previewRef}
       >
         <div className={styles["chat-info"]}>
+          {/** 
           <div className={styles["logo"] + " no-dark"}>
             <NextImage
               src={SciChatIcon.src}
               alt="logo"
-              width={50}
-              height={50}
+              width={16}
+              height={16}
             />
           </div>
-
+*/}
           <div>
-            <div className={styles["main-title"]}>ChatGPT Next Web</div>
+            <div className={styles["main-title"]}>SciChat</div>
             <div className={styles["sub-title"]}>
-              github.com/Yidadaa/ChatGPT-Next-Web
+              基于OpenAI API 的智能问答程序
             </div>
             <div className={styles["icons"]}>
               <ExportAvatar avatar={config.avatar} />
