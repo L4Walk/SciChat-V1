@@ -36,7 +36,7 @@ export function Avatar(props: { model?: ModelType; avatar?: string }) {
     return (
       <div className="no-dark">
         {props.model?.startsWith("gpt-4") ? (
-          <BlackBotIcon className="user-avatar" />
+          <ChatBot32Icon className="user-avatar" />
         ) : (
           <ChatBot32Icon className="user-avatar" />
         )}

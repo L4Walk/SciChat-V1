@@ -42,7 +42,7 @@ export const DEFAULT_CONFIG = {
     model: "gpt-3.5-turbo" as ModelType,
     temperature: 0.5,
     top_p: 1,
-    max_tokens: 2000,
+    max_tokens: 500,
     presence_penalty: 0,
     frequency_penalty: 0,
     sendMemory: true,
@@ -82,7 +82,7 @@ export const ModalConfigValidator = {
     return x as ModelType;
   },
   max_tokens(x: number) {
-    return limitNumber(x, 0, 100000, 2000);
+    return limitNumber(x, 0, 100000, 500);
   },
   presence_penalty(x: number) {
     return limitNumber(x, -2, 2, 0);
@@ -151,7 +151,6 @@ export const useAppConfig = create<ChatConfigStore>()(
       version: 3.7,
       migrate(persistedState, version) {
         const state = persistedState as ChatConfig;
-
         if (version < 3.4) {
           state.modelConfig.sendMemory = true;
           state.modelConfig.historyMessageCount = 4;

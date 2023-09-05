@@ -67,7 +67,6 @@ Current time: {{time}}`;
 
 export const SUMMARIZE_MODEL = "gpt-3.5-turbo";
 
-/*
 export const DEFAULT_MODELS = [
   {
     name: "gpt-4",
@@ -102,8 +101,8 @@ export const DEFAULT_MODELS = [
     available: true,
   },
 ] as const;
-*/
 
+/*
 export const DEFAULT_MODELS = [
   {
     name: "gpt-4",
@@ -150,6 +149,7 @@ export const DEFAULT_MODELS = [
     available: true,
   },
 ] as const;
+*/
 
 export const CHAT_PAGE_SIZE = 15;
 export const MAX_RENDER_MSG_COUNT = 45;

@@ -467,15 +467,13 @@ export function ChatActions(props: {
         />
       )}
 
-      {/** 
       {props.hitBottom && (
         <ChatAction
-          onClick={props.showPromptModal}
+          onClick={props.showPromptModal} // 对话详细设置
           text={Locale.Chat.InputActions.Settings}
           icon={<SettingsIcon />}
         />
       )}
-      */}
 
       <ChatAction
         onClick={nextTheme}
@@ -521,13 +519,13 @@ export function ChatActions(props: {
           });
         }}
       />
-      {/** 
+
       <ChatAction
-        onClick={() => setShowModelSelector(true)}
+        onClick={() => setShowModelSelector(true)} // 选择模型
         text={currentModel}
         icon={<RobotIcon />}
       />
-*/}
+
       {showModelSelector && (
         <Selector
           defaultSelectedValue={currentModel}
